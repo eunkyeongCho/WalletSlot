@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.ssafy.b108'
+version = '0.0.1-SNAPSHOT'
+description = 'walletslot-backend'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+//    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+//    implementation 'org.apache.httpcomponents.core5:httpcore5:5.3'
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.8.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.23.0'
+    implementation "software.amazon.awssdk:kms"
+    implementation platform("software.amazon.awssdk:bom:2.25.32")
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    // (옵션) Secrets Manager를 쓰고 싶다면
+    // implementation "software.amazon.awssdk:secretsmanager"
+
+    // Nimbus JOSE + JWT 라이브러리 (서명/검증/파싱용)
+    // HS256/RS256 모두 지원. 여기선 HS256(대칭키)로 시작.
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.37'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

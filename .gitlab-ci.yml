@@ -1,0 +1,41 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: $DOCKER_REGISTRY_IMAGE:latest
+
+build:
+  stage: build
+  tags: [cicd]   # Runner 등록 시 사용한 tag
+  image: docker:24.0
+  services:
+    - docker:24.0-dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "🔑 Logging in to GitLab Registry"
+    - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USER" $DOCKER_REGISTRY --password-stdin
+    - echo "📦 Building Docker image"
+    - docker build -t "$IMAGE_TAG" ./walletslot-backend
+    - echo "🚀 Pushing Docker image"
+    - docker push "$IMAGE_TAG"
+
+deploy:
+  stage: deploy
+  tags: [cicd]
+  image: alpine:3.19
+  before_script:
+    - apk add --no-cache openssh-client docker-cli
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - echo "🚀 Deploying to EC2..."
+    - ssh -o StrictHostKeyChecking=no ubuntu@j13b108.p.ssafy.io "
+        cd ~/walletslot &&
+        docker compose pull &&
+        docker compose up -d --remove-orphans
+      "
+  only:
+    - develop

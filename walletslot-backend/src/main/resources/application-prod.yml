@@ -1,0 +1,36 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none              # ✅ prod도 DDL 완전 비활성화
+
+server:
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+cloud:
+  aws:
+    region: ${AWS_REGION:ap-northeast-2}
+
+app:
+  security:
+    jwt:
+      secret_b64: ${JWT_SECRET_B64}
+
+    pepper:
+      cipher:
+        pepper_v1: ${PEPPER_CIPHER_V1}   # ACTIVE
+        pepper_v0: ${PEPPER_CIPHER_V0}   # PREVIOUS(그레이스 후 제거)
+
+    bcrypt:
+      cost: ${BCRYPT_COST:12}

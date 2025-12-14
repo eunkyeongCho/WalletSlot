@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/walletslotdb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+
+app:
+  security:
+    jwt:
+      secret_b64: ${JWT_SECRET_B64}
+
+    pepper:
+      cipher:
+        pepper_v1: ${PEPPER_CIPHER_V1}   # ACTIVE
+        pepper_v0: ${PEPPER_CIPHER_V0}   # PREVIOUS(그레이스 후 제거)
+
+    bcrypt:
+      cost: 12

@@ -1,0 +1,7 @@
+#feat: 새로운 기능 개발 (ex. 슬롯 REST API 개발)
+#fix: 버그 수정 (ex. 슬롯 생성 안되는 에러 해결)
+#docs: 문서 관련 변경 (ex. README 파일 수정)
+#refactor: 리팩토링 (ex. 슬롯 REST API 예외처리 위치 개선)
+#test: 테스트 코드 추가 (ex. 슬롯 REST API 단위 테스트 코드 추가)
+#chore: 기타 잡일 (ex. 프로젝트 이름 WalletSlot으로 수정)
+#perf: 성능 개선 (ex. slot 테이블 인덱싱)

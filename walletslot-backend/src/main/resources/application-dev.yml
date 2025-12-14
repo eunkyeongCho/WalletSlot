@@ -1,0 +1,51 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/walletslotdb?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.jdbc.time_zone: Asia/Seoul
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+
+app:
+  security:
+    jwt:
+      secret_b64: ${JWT_SECRET_B64}
+
+    refresh:
+      enabled: true          # ✅ dev에서 리프레시 사용
+      rotation: true         # 회전(rotate) 사용
+      reuse-block: true      # 재사용 탐지 시 차단
+      hash-pepper: ${REFRESH_TOKEN_HASH_PEPPER:dev-rt-pepper}  # base에 이미 있으면 생략 가능
+
+    pepper:
+      cipher:
+        pepper_v1: ${PEPPER_CIPHER_V1}
+        pepper_v0: ${PEPPER_CIPHER_V0}
+
+fcm:
+  server:
+    project-id: ${FCM_PROJECT_ID}
+    service-account-json-path: ${FCM_SERVICE_ACCOUNT_JSON_PATH}
+
+api:
+  ssafy:
+    finance:
+      baseUrl: https://finopenapi.ssafy.io
+      apiKey: ${SSAFY_FINANCE_API_KEY}
+      userKey: ${SSAFY_FINANCE_USER_KEY}
+    gms:
+      key: ${SSAFY_GMS_KEY}
+  haeji:
+    openai:
+      key: ${OPENAI_API_KEY}

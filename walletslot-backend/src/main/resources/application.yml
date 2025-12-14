@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: walletslot-backend
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.jdbc.time_zone: Asia/Seoul
+      # dev에만 있던 dialect를 기본에도 반영 (자동 인식이 안될 상황 대비)
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+
+server:
+  # prod에서 쓰던 설정을 기본으로 반영 (리버스 프록시/X-Forwarded-* 신뢰)
+  forward-headers-strategy: framework
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    tags-sorter: alpha
+    operations-sorter: method
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+cloud:
+  aws:
+    # prod처럼 환경변수 우선, 없으면 기존 기본값 사용
+    region: ${AWS_REGION:ap-northeast-2}
+
+api:
+  ssafy:
+    finance:
+      baseUrl: https://finopenapi.ssafy.io
+      apiKey: ${SSAFY_FINANCE_API_KEY}
+      userKey: ${SSAFY_FINANCE_USER_KEY}
+    gms:
+      key: ${SSAFY_GMS_KEY}
+  haeji:
+    openai:
+      key: ${OPENAI_API_KEY}
+fcm:
+  server:
+    project-id: ${FCM_PROJECT_ID}
+    service-account-json-path: ${FCM_SERVICE_ACCOUNT_JSON_PATH}
+
+app:
+  sms:
+    provider: aligo        # <= 이걸 켜야 AligoSmsSender가 올라옴
+    aligo:
+      key: ${ALIGO_API_KEY}
+      userId: ${ALIGO_USER_ID}
+      sender: ${ALIGO_SENDER_NUMBER}   # 발신번호 사전 등록 필수
+
+  security:
+    jwt:
+      access-ttl-minutes: 1440
+      refresh-ttl-days: 30
+      clock-skew-seconds: 60
+      # prod의 secret_b64를 기본에도 반영. 환경변수 없으면 dev 기본값 사용
+      secret_b64: ${JWT_SECRET_B64}
+
+    # prod처럼 환경변수 우선, 없으면 기존 기본값(12)
+    bcrypt:
+      cost: 12
+
+    # RT(리프레시) 토글: 기본 OFF (코드만 준비, 현재 미사용)
+    refresh:
+      enabled: true
+      rotation: true
+      reuse-block: true
+      hash-pepper: ${REFRESH_TOKEN_HASH_PEPPER}
+
+    # prod의 pepper 구성을 기본에도 반영. 없으면 dev 기본값 사용
+    pepper:
+      cipher:
+        pepper_v1: ${PEPPER_CIPHER_V1}
+        pepper_v0: ${PEPPER_CIPHER_V0}
+
+    otp:
+      ttl-minutes: 3
+      secret: ${OTP_SECRET}
+
+encryption:
+  aes:
+    base64-key: ${AES_BASE64_KEY}
+
+logging:
+  level:
+    com.ssafy.b108.walletslot: INFO
+
+naver:
+  ocr:
+    enabled: true
+    invoke-url: ${NAVER_OCR_INVOKE_URL}   # 호스트만 (뒤에 / 없음)
+    receipt-path: "/custom/v1/{projectId}/{privateKey}/document/receipt"
+    project-id: ${NAVER_OCR_PROJECT_ID}                                  # Invoke URL의 첫 세그먼트
+    private-key: ${NAVER_OCR_PRIVATE_KEY}                         # Invoke URL의 두 번째 세그먼트
+    secret: ${NAVER_OCR_SECRET}
+    version: "V2"
+
+scheduling:
+  zone: Asia/Seoul
+  ai-report:
+    cron: "0 10 0 * * *"
+    # cron: "0 */1 * * * *"
